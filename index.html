@@ -34,6 +34,8 @@
   --club-primario:#7c1d2e;
   --club-secundario:#f0d264;
   --club-tinta:#ffffff;
+  --club-tinta-2:#000000;
+  --club-borde-escudo:transparent;
 
   --fam:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
@@ -147,7 +149,8 @@ td.dsc{color:var(--gris-30);}
   display:flex; align-items:center; gap:var(--e3); margin-bottom:var(--e3);
 }
 .escudo{width:44px; height:44px; border-radius:50%; background:var(--club-secundario);
-        color:#000; display:flex; align-items:center; justify-content:center;
+        color:var(--club-tinta-2); border:2px solid var(--club-borde-escudo);
+        display:flex; align-items:center; justify-content:center;
         font-weight:800; font-size:18px;}
 
 .check{display:grid; gap:var(--e2); padding-left:var(--e5);}
@@ -289,9 +292,15 @@ document.querySelectorAll('#colores button').forEach(b=>{
   b.onclick=()=>{
     const [,p,s]=CLUBES[+b.dataset.i];
     const r=document.documentElement.style;
+    const tintaP=tintaPara(p);
     r.setProperty('--club-primario',p);
     r.setProperty('--club-secundario',s);
-    r.setProperty('--club-tinta',tintaPara(p));
+    r.setProperty('--club-tinta',tintaP);
+    // cada color del club usado como fondo necesita su propia tinta calculada
+    r.setProperty('--club-tinta-2',tintaPara(s));
+    // una tinta legible no garantiza una forma visible: si el escudo no
+    // contrasta con la cabecera, necesita borde
+    r.setProperty('--club-borde-escudo', contraste(p,s) < 3 ? tintaP : 'transparent');
   };
 });
 
